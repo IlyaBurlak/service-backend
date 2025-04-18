@@ -1,12 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  @Get('/api/test')
+  getTestData() {
+    return {
+      message: 'CORS работает!',
+      timestamp: new Date().toISOString(),
+    };
+  }
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    return 'Hello World!';
   }
 }
