@@ -8,12 +8,14 @@ async function bootstrap() {
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
+  const corsOrigins = process.env.CORS_ORIGINS || 'http://localhost:5173';
+
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: corsOrigins.split(','),
     methods: 'GET, POST, PUT, PATCH, DELETE',
     credentials: true,
   });
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
