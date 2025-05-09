@@ -1,0 +1,71 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  surname   String   @default("")
+  isGuest   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  Comment Comment[]
+
+  Reaction Reaction[]
+
+  RefreshToken RefreshToken[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+
+  Reaction Reaction[]
+}
+
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  type      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId Int?
+}
+
+model Project {
+  id           Int     @id @default(autoincrement())
+  title        String
+  image        String?
+  imageBig     String?
+  github       String?
+  linkOnDeploy String?
+  link         String?
+  filter       String
+  tags         Tag[]
+}
+
+model Tag {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  projects Project[]
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
