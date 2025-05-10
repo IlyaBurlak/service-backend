@@ -46,8 +46,12 @@ export class AuthController {
       password: body.password,
       name: body.name,
       surname: body.surname,
-      isGuest: false,
     });
+  }
+
+  @Post('register/guest')
+  async registerGuest(): Promise<LoginResponse> {
+    return this.authService.registerGuest();
   }
 
   @Get('me')
