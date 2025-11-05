@@ -4,6 +4,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { UsersModule } from './users/users.module';
+import { ProjectsModule } from './projects/projects.module';
+import { CommentsModule } from './comments/comments.module';
+import { ReactionsModule } from './reactions/reactions.module';
 
 @Module({
   imports: [
@@ -13,6 +17,10 @@ import { PrismaModule } from '../prisma/prisma.module';
     }),
     AuthModule,
     PrismaModule,
+    UsersModule,
+    ProjectsModule,
+    CommentsModule,
+    ReactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
