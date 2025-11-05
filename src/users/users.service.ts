@@ -1,4 +1,8 @@
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
@@ -25,7 +29,11 @@ export class UsersService {
     return safe;
   }
 
-  async update(id: number, requesterId: number, data: Prisma.UserUpdateInput): Promise<Omit<User, 'password'>> {
+  async update(
+    id: number,
+    requesterId: number,
+    data: Prisma.UserUpdateInput,
+  ): Promise<Omit<User, 'password'>> {
     if (id !== requesterId) {
       throw new ForbiddenException('You can only update your own profile');
     }
@@ -34,7 +42,7 @@ export class UsersService {
     return safe;
   }
 
-  async remove(id: number, requesterId: number): Promise<{ success: true }>{
+  async remove(id: number, requesterId: number): Promise<{ success: true }> {
     if (id !== requesterId) {
       throw new ForbiddenException('You can only delete your own account');
     }
@@ -42,5 +50,3 @@ export class UsersService {
     return { success: true };
   }
 }
-
-

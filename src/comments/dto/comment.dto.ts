@@ -28,7 +28,10 @@ export class UserInCommentDto {
   @ApiProperty({ description: 'ID пользователя', example: 1 })
   id: number;
 
-  @ApiProperty({ description: 'Email пользователя', example: 'user@example.com' })
+  @ApiProperty({
+    description: 'Email пользователя',
+    example: 'user@example.com',
+  })
   email: string;
 
   @ApiProperty({ description: 'Имя пользователя', example: 'Иван' })
@@ -40,7 +43,10 @@ export class UserInCommentDto {
   @ApiProperty({ description: 'Является ли гостем', example: false })
   isGuest: boolean;
 
-  @ApiProperty({ description: 'Дата создания', example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({
+    description: 'Дата создания',
+    example: '2024-01-01T00:00:00.000Z',
+  })
   createdAt: Date;
 }
 
@@ -62,19 +68,30 @@ export class CommentResponseDto {
   @ApiProperty({ description: 'ID комментария', example: 1 })
   id: number;
 
-  @ApiProperty({ description: 'Текст комментария', example: 'Отличный проект!' })
+  @ApiProperty({
+    description: 'Текст комментария',
+    example: 'Отличный проект!',
+  })
   comment: string;
 
-  @ApiProperty({ description: 'Дата создания', example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({
+    description: 'Дата создания',
+    example: '2024-01-01T00:00:00.000Z',
+  })
   createdAt: Date;
 
   @ApiProperty({ description: 'ID пользователя', example: 1 })
   userId: number;
 
-  @ApiProperty({ description: 'Информация о пользователе', type: UserInCommentDto })
+  @ApiProperty({
+    description: 'Информация о пользователе',
+    type: UserInCommentDto,
+  })
   user: UserInCommentDto;
 
-  @ApiProperty({ description: 'Реакции на комментарий', type: [ReactionInCommentDto] })
+  @ApiProperty({
+    description: 'Реакции на комментарий',
+    type: [ReactionInCommentDto],
+  })
   Reaction: ReactionInCommentDto[];
 }
-

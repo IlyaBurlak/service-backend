@@ -130,4 +130,3 @@ export class ProjectResponseDto {
   @ApiProperty({ description: 'Теги проекта', type: [TagDto] })
   tags: TagDto[];
 }
-

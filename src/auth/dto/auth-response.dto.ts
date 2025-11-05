@@ -12,7 +12,10 @@ export class RegisterResponseDto {
   @ApiProperty({ description: 'ID пользователя', example: 1 })
   id: number;
 
-  @ApiProperty({ description: 'Email пользователя', example: 'user@example.com' })
+  @ApiProperty({
+    description: 'Email пользователя',
+    example: 'user@example.com',
+  })
   email: string;
 
   @ApiProperty({ description: 'Имя пользователя', example: 'Иван' })
@@ -24,7 +27,10 @@ export class RegisterResponseDto {
   @ApiProperty({ description: 'Является ли гостем', example: false })
   isGuest: boolean;
 
-  @ApiProperty({ description: 'Дата создания', example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({
+    description: 'Дата создания',
+    example: '2024-01-01T00:00:00.000Z',
+  })
   createdAt: Date;
 }
 
@@ -40,7 +46,10 @@ export class MeResponseDto {
   @ApiProperty({ description: 'ID пользователя', example: 1 })
   id: number;
 
-  @ApiProperty({ description: 'Email пользователя', example: 'user@example.com' })
+  @ApiProperty({
+    description: 'Email пользователя',
+    example: 'user@example.com',
+  })
   email: string;
 
   @ApiProperty({ description: 'Имя пользователя', example: 'Иван' })
@@ -52,7 +61,9 @@ export class MeResponseDto {
   @ApiProperty({ description: 'Является ли гостем', example: false })
   isGuest: boolean;
 
-  @ApiProperty({ description: 'Дата создания', example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({
+    description: 'Дата создания',
+    example: '2024-01-01T00:00:00.000Z',
+  })
   createdAt: Date;
 }
-

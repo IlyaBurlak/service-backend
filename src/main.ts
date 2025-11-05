@@ -10,10 +10,8 @@ async function bootstrap() {
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
-  const corsOrigins = process.env.CORS_ORIGINS || 'http://localhost:5173';
-
   app.enableCors({
-    origin: corsOrigins.split(','),
+    origin: true,
     methods: 'GET, POST, PUT, PATCH, DELETE',
     credentials: true,
   });
@@ -30,7 +28,7 @@ async function bootstrap() {
   // Swagger документация
   const port = process.env.PORT || 3000;
   const baseUrl = process.env.BASE_URL || `http://localhost:${port}`;
-  
+
   const config = new DocumentBuilder()
     .setTitle('Service Backend API')
     .setDescription('API документация для Service Backend')
@@ -61,4 +59,4 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 3000);
 }
-bootstrap();
+void bootstrap();

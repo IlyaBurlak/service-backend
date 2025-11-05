@@ -50,7 +50,9 @@ export class ReactionsController {
     description: 'Список реакций',
     type: [ReactionResponseDto],
   })
-  async findAll(@Query() query: QueryReactionsDto): Promise<ReactionResponseDto[]> {
+  async findAll(
+    @Query() query: QueryReactionsDto,
+  ): Promise<ReactionResponseDto[]> {
     return this.reactionsService.findAll({
       commentId: query.commentId,
     });
@@ -124,5 +126,3 @@ export class ReactionsController {
     return this.reactionsService.remove(id, user.id);
   }
 }
-
-

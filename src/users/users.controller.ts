@@ -23,11 +23,7 @@ import { UsersService } from './users.service';
 import { Prisma } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
-import {
-  CreateUserDto,
-  UpdateUserDto,
-  UserResponseDto,
-} from './dto/user.dto';
+import { CreateUserDto, UpdateUserDto, UserResponseDto } from './dto/user.dto';
 import { SuccessResponseDto } from '../common/dto/success-response.dto';
 
 @ApiTags('Пользователи')
@@ -55,7 +51,9 @@ export class UsersController {
     type: UserResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Пользователь не найден' })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto> {
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<UserResponseDto> {
     return this.usersService.findOne(id);
   }
 
@@ -63,7 +61,8 @@ export class UsersController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Создать нового пользователя',
-    description: 'Административная функция. Для обычной регистрации используйте /auth/register',
+    description:
+      'Административная функция. Для обычной регистрации используйте /auth/register',
   })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({
@@ -101,9 +100,17 @@ export class UsersController {
     // Do not allow password updates here to avoid unhashed saves
     if ('password' in (data as Record<string, unknown>)) {
       const { password, ...rest } = data as Record<string, unknown>;
-      return this.usersService.update(id, user.id, rest as unknown as Prisma.UserUpdateInput);
+      return this.usersService.update(
+        id,
+        user.id,
+        rest as unknown as Prisma.UserUpdateInput,
+      );
     }
-    return this.usersService.update(id, user.id, data as Prisma.UserUpdateInput);
+    return this.usersService.update(
+      id,
+      user.id,
+      data as Prisma.UserUpdateInput,
+    );
   }
 
   @Delete(':id')
@@ -129,5 +136,3 @@ export class UsersController {
     return this.usersService.remove(id, user.id);
   }
 }
-
-

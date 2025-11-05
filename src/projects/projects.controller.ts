@@ -53,7 +53,9 @@ export class ProjectsController {
     type: ProjectResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Проект не найден' })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<ProjectResponseDto> {
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ProjectResponseDto> {
     return this.projectsService.findOne(id);
   }
 
@@ -106,9 +108,9 @@ export class ProjectsController {
   })
   @ApiResponse({ status: 401, description: 'Не авторизован' })
   @ApiResponse({ status: 404, description: 'Проект не найден' })
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<SuccessResponseDto> {
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<SuccessResponseDto> {
     return this.projectsService.remove(id);
   }
 }
-
-

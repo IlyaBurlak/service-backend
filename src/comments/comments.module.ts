@@ -11,5 +11,3 @@ import { AuthModule } from '../auth/auth.module';
   exports: [CommentsService],
 })
 export class CommentsModule {}
-
-

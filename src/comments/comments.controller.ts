@@ -54,7 +54,9 @@ export class CommentsController {
     type: CommentResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Комментарий не найден' })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<CommentResponseDto> {
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CommentResponseDto> {
     return this.commentsService.findOne(id);
   }
 
@@ -126,5 +128,3 @@ export class CommentsController {
     return this.commentsService.remove(id, user.id);
   }
 }
-
-
