@@ -80,7 +80,7 @@ export class UsersController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Обновить информацию о пользователе',
-    description: 'Можно обновить только свой профиль',
+    description: 'Можно обновить только свой профиль (или админ может обновить любой)',
   })
   @ApiParam({ name: 'id', description: 'ID пользователя', type: Number })
   @ApiBody({ type: UpdateUserDto })
@@ -94,7 +94,7 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Пользователь не найден' })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: { id: number },
+    @CurrentUser() user: { id: number; role?: string },
     @Body() data: UpdateUserDto,
   ): Promise<UserResponseDto> {
     // Do not allow password updates here to avoid unhashed saves
@@ -103,14 +103,11 @@ export class UsersController {
       return this.usersService.update(
         id,
         user.id,
+        user.role,
         rest as unknown as Prisma.UserUpdateInput,
       );
     }
-    return this.usersService.update(
-      id,
-      user.id,
-      data as Prisma.UserUpdateInput,
-    );
+    return this.usersService.update(id, user.id, user.role, data as Prisma.UserUpdateInput);
   }
 
   @Delete(':id')
@@ -118,7 +115,7 @@ export class UsersController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Удалить пользователя',
-    description: 'Можно удалить только свой аккаунт',
+    description: 'Можно удалить только свой аккаунт (или админ может удалить любой)',
   })
   @ApiParam({ name: 'id', description: 'ID пользователя', type: Number })
   @ApiResponse({
@@ -131,8 +128,8 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Пользователь не найден' })
   async remove(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: { id: number },
+    @CurrentUser() user: { id: number; role?: string },
   ): Promise<SuccessResponseDto> {
-    return this.usersService.remove(id, user.id);
+    return this.usersService.remove(id, user.id, user.role);
   }
 }

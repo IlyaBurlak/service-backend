@@ -21,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
 import {
   CreateProjectDto,
   UpdateProjectDto,
@@ -99,7 +100,10 @@ export class ProjectsController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Удалить проект' })
+  @ApiOperation({
+    summary: 'Удалить проект',
+    description: 'Только администратор может удалять проекты',
+  })
   @ApiParam({ name: 'id', description: 'ID проекта', type: Number })
   @ApiResponse({
     status: 200,
@@ -110,7 +114,8 @@ export class ProjectsController {
   @ApiResponse({ status: 404, description: 'Проект не найден' })
   async remove(
     @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: { id: number; role?: string },
   ): Promise<SuccessResponseDto> {
-    return this.projectsService.remove(id);
+    return this.projectsService.remove(id, user.role);
   }
 }

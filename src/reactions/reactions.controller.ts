@@ -83,7 +83,7 @@ export class ReactionsController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Обновить реакцию',
-    description: 'Можно обновить только свою реакцию',
+    description: 'Можно обновить только свою реакцию (или админ может обновить любую)',
   })
   @ApiParam({ name: 'id', description: 'ID реакции', type: Number })
   @ApiBody({ type: UpdateReactionDto })
@@ -97,10 +97,10 @@ export class ReactionsController {
   @ApiResponse({ status: 404, description: 'Реакция не найдена' })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: { id: number },
+    @CurrentUser() user: { id: number; role?: string },
     @Body() body: UpdateReactionDto,
   ): Promise<ReactionResponseDto> {
-    return this.reactionsService.update(id, user.id, body);
+    return this.reactionsService.update(id, user.id, user.role, body);
   }
 
   @Delete(':id')
@@ -108,7 +108,7 @@ export class ReactionsController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Удалить реакцию',
-    description: 'Можно удалить только свою реакцию',
+    description: 'Можно удалить только свою реакцию (или админ может удалить любую)',
   })
   @ApiParam({ name: 'id', description: 'ID реакции', type: Number })
   @ApiResponse({
@@ -121,8 +121,8 @@ export class ReactionsController {
   @ApiResponse({ status: 404, description: 'Реакция не найдена' })
   async remove(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: { id: number },
+    @CurrentUser() user: { id: number; role?: string },
   ): Promise<SuccessResponseDto> {
-    return this.reactionsService.remove(id, user.id);
+    return this.reactionsService.remove(id, user.id, user.role);
   }
 }

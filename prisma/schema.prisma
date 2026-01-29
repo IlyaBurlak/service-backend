@@ -8,6 +8,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -15,6 +20,7 @@ model User {
   name      String
   surname   String   @default("")
   isGuest   Boolean  @default(false)
+  role      Role     @default(USER)
   createdAt DateTime @default(now())
 
   Comment Comment[]

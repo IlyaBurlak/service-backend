@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Project, Tag } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { isAdmin } from '../common/helpers/role.helper';
 
 @Injectable()
 export class ProjectsService {
@@ -74,7 +75,14 @@ export class ProjectsService {
     return project;
   }
 
-  async remove(id: number): Promise<{ success: true }> {
+  async remove(
+    id: number,
+    requesterRole: string | undefined,
+  ): Promise<{ success: true }> {
+    // Проекты может удалять только админ (так как у проектов нет владельца)
+    if (!isAdmin(requesterRole)) {
+      throw new NotFoundException('Project not found or access denied');
+    }
     await this.prisma.project.delete({ where: { id } });
     return { success: true };
   }

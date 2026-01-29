@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { canModifyResource } from '../common/helpers/role.helper';
 
 @Injectable()
 export class UsersService {
@@ -32,9 +33,10 @@ export class UsersService {
   async update(
     id: number,
     requesterId: number,
+    requesterRole: string | undefined,
     data: Prisma.UserUpdateInput,
   ): Promise<Omit<User, 'password'>> {
-    if (id !== requesterId) {
+    if (!canModifyResource(requesterId, id, requesterRole)) {
       throw new ForbiddenException('You can only update your own profile');
     }
     const user = await this.prisma.user.update({ where: { id }, data });
@@ -42,8 +44,12 @@ export class UsersService {
     return safe;
   }
 
-  async remove(id: number, requesterId: number): Promise<{ success: true }> {
-    if (id !== requesterId) {
+  async remove(
+    id: number,
+    requesterId: number,
+    requesterRole: string | undefined,
+  ): Promise<{ success: true }> {
+    if (!canModifyResource(requesterId, id, requesterRole)) {
       throw new ForbiddenException('You can only delete your own account');
     }
     await this.prisma.user.delete({ where: { id } });

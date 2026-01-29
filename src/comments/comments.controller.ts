@@ -85,7 +85,7 @@ export class CommentsController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Обновить комментарий',
-    description: 'Можно обновить только свой комментарий',
+    description: 'Можно обновить только свой комментарий (или админ может обновить любой)',
   })
   @ApiParam({ name: 'id', description: 'ID комментария', type: Number })
   @ApiBody({ type: UpdateCommentDto })
@@ -99,10 +99,10 @@ export class CommentsController {
   @ApiResponse({ status: 404, description: 'Комментарий не найден' })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: { id: number },
+    @CurrentUser() user: { id: number; role?: string },
     @Body() body: UpdateCommentDto,
   ): Promise<CommentResponseDto> {
-    return this.commentsService.update(id, user.id, body);
+    return this.commentsService.update(id, user.id, user.role, body);
   }
 
   @Delete(':id')
@@ -110,7 +110,7 @@ export class CommentsController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Удалить комментарий',
-    description: 'Можно удалить только свой комментарий',
+    description: 'Можно удалить только свой комментарий (или админ может удалить любой)',
   })
   @ApiParam({ name: 'id', description: 'ID комментария', type: Number })
   @ApiResponse({
@@ -123,8 +123,8 @@ export class CommentsController {
   @ApiResponse({ status: 404, description: 'Комментарий не найден' })
   async remove(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: { id: number },
+    @CurrentUser() user: { id: number; role?: string },
   ): Promise<SuccessResponseDto> {
-    return this.commentsService.remove(id, user.id);
+    return this.commentsService.remove(id, user.id, user.role);
   }
 }

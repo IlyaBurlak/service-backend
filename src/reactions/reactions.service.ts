@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, Reaction } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { canModifyResource } from '../common/helpers/role.helper';
 
 @Injectable()
 export class ReactionsService {
@@ -36,11 +37,12 @@ export class ReactionsService {
   async update(
     id: number,
     requesterId: number,
+    requesterRole: string | undefined,
     data: { type?: string },
   ): Promise<Reaction> {
     const existing = await this.prisma.reaction.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Reaction not found');
-    if (existing.userId !== requesterId)
+    if (!canModifyResource(requesterId, existing.userId, requesterRole))
       throw new ForbiddenException('Not allowed');
     return this.prisma.reaction.update({
       where: { id },
@@ -48,10 +50,14 @@ export class ReactionsService {
     });
   }
 
-  async remove(id: number, requesterId: number): Promise<{ success: true }> {
+  async remove(
+    id: number,
+    requesterId: number,
+    requesterRole: string | undefined,
+  ): Promise<{ success: true }> {
     const existing = await this.prisma.reaction.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Reaction not found');
-    if (existing.userId !== requesterId)
+    if (!canModifyResource(requesterId, existing.userId, requesterRole))
       throw new ForbiddenException('Not allowed');
     await this.prisma.reaction.delete({ where: { id } });
     return { success: true };

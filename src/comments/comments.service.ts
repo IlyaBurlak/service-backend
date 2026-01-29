@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Comment, Prisma, Reaction, User } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { canModifyResource } from '../common/helpers/role.helper';
 
 @Injectable()
 export class CommentsService {
@@ -54,11 +55,12 @@ export class CommentsService {
   async update(
     id: number,
     requesterId: number,
+    requesterRole: string | undefined,
     data: { comment?: string },
   ): Promise<Comment & { user: Omit<User, 'password'>; Reaction: Reaction[] }> {
     const existing = await this.prisma.comment.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Comment not found');
-    if (existing.userId !== requesterId)
+    if (!canModifyResource(requesterId, existing.userId, requesterRole))
       throw new ForbiddenException('Not allowed');
     const comment = await this.prisma.comment.update({
       where: { id },
@@ -69,10 +71,14 @@ export class CommentsService {
     return { ...comment, user: safeUser as unknown as Omit<User, 'password'> };
   }
 
-  async remove(id: number, requesterId: number): Promise<{ success: true }> {
+  async remove(
+    id: number,
+    requesterId: number,
+    requesterRole: string | undefined,
+  ): Promise<{ success: true }> {
     const existing = await this.prisma.comment.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Comment not found');
-    if (existing.userId !== requesterId)
+    if (!canModifyResource(requesterId, existing.userId, requesterRole))
       throw new ForbiddenException('Not allowed');
     await this.prisma.comment.delete({ where: { id } });
     return { success: true };
